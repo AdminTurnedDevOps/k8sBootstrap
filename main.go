@@ -83,5 +83,4 @@ func installArgo() {
 	}
 
 	fmt.Println(results)
-
 }
