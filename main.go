@@ -7,7 +7,7 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/opentracing/opentracing-go/log"
+	// "github.com/opentracing/opentracing-go/log"
 	"k8s.io/client-go/dynamic"
 	"k8s.io/client-go/tools/clientcmd"
 	"k8s.io/client-go/util/homedir"
@@ -59,11 +59,6 @@ func installArgo() {
 	// Call upon the CLI package
 	settings := cli.New()
 
-	chart, err := loader.Load(helmChart)
-	if err != nil {
-		log.Println(err)
-	}
-
 	// Create a new instance of the configuration
 	config := new(action.Configuration)
 
@@ -74,6 +69,22 @@ func installArgo() {
 
 	// Create a new instance of the `Install` action, which is similar to running `helm instll`
 	client := action.NewInstall(config)
+
+	// Specify Namespace for ArgoCD
+	client.CreateNamespace = true
+	client.Namespace = "argocd"
+
+	// Find the Helm Chart. similiar to a `helm add`
+	cp, err := client.ChartPathOptions.LocateChart(helmChart, settings)
+
+	if err != nil {
+		log.Println(err)
+	}
+
+	chart, err := loader.Load(cp)
+	if err != nil {
+		log.Println(err)
+	}
 
 	// Install a helm chart
 	client.ReleaseName = releaseName
