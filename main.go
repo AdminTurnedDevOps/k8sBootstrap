@@ -73,6 +73,17 @@ func installArgo() {
 	client.CreateNamespace = true
 	client.Namespace = "argocd"
 
+	// values := map[string]interface{}{
+	//     "redis": map[string]interface{}{
+	//         "sentinel": map[string]interface{}{
+	//             "masterName": "BigMaster",
+	//             "pass":       "random",
+	//             "addr":       "localhost",
+	//             "port":       "26379",
+	//         },
+	//     },
+	// }
+
 	// Find the Helm Chart. similiar to a `helm add`
 	cp, err := client.ChartPathOptions.LocateChart(helmChart, settings)
 
